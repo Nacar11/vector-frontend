@@ -4,8 +4,7 @@
 
 import { useState, useRef, useCallback } from 'react';
 import ReactFlow, { Controls, Background, MiniMap } from 'reactflow';
-import { useStore } from './store';
-import { shallow } from 'zustand/shallow';
+import { useStore, EDGE_STYLE } from './store';
 import { useTheme } from './theme';
 import { nodeTypes, buildInitialData } from './nodes/nodeRegistry';
 
@@ -14,30 +13,18 @@ import 'reactflow/dist/style.css';
 const gridSize = 20;
 const proOptions = { hideAttribution: true };
 
-const selector = (state) => ({
-  nodes: state.nodes,
-  edges: state.edges,
-  getNodeID: state.getNodeID,
-  addNode: state.addNode,
-  onNodesChange: state.onNodesChange,
-  onEdgesChange: state.onEdgesChange,
-  onConnect: state.onConnect,
-});
-
 export const PipelineUI = () => {
     const reactFlowWrapper = useRef(null);
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
     const { theme } = useTheme();
     const isDark = theme === 'dark';
-    const {
-      nodes,
-      edges,
-      getNodeID,
-      addNode,
-      onNodesChange,
-      onEdgesChange,
-      onConnect
-    } = useStore(selector, shallow);
+    const nodes = useStore((state) => state.nodes);
+    const edges = useStore((state) => state.edges);
+    const getNodeID = useStore((state) => state.getNodeID);
+    const addNode = useStore((state) => state.addNode);
+    const onNodesChange = useStore((state) => state.onNodesChange);
+    const onEdgesChange = useStore((state) => state.onEdgesChange);
+    const onConnect = useStore((state) => state.onConnect);
 
     const onDrop = useCallback(
         (event) => {
@@ -92,7 +79,7 @@ export const PipelineUI = () => {
                 proOptions={proOptions}
                 snapGrid={[gridSize, gridSize]}
                 connectionLineType='smoothstep'
-                connectionLineStyle={{ stroke: '#6366f1', strokeWidth: 2 }}
+                connectionLineStyle={EDGE_STYLE}
                 fitView
             >
                 <Background color={isDark ? '#334155' : '#cbd5e1'} gap={gridSize} />

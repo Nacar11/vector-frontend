@@ -69,10 +69,6 @@ const renderers = {
       onChange={(e) => onChange(e.target.checked)}
     />
   ),
-  // Escape hatch: a field can supply its own renderer.
-  // Signature: render({ id, data, value, onChange }) => JSX
-  custom: ({ field, id, data, value, onChange }) =>
-    field.render?.({ id, data, value, onChange }) ?? null,
 };
 
 // Renders one labeled field row. The control stays wrapped in the <label> so its
