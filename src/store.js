@@ -11,6 +11,7 @@ import {
 export const useStore = create((set, get) => ({
     nodes: [],
     edges: [],
+    nodeIDs: {},
     getNodeID: (type) => {
         const newIDs = {...get().nodeIDs};
         if (newIDs[type] === undefined) {
@@ -40,15 +41,15 @@ export const useStore = create((set, get) => ({
         edges: addEdge({...connection, type: 'smoothstep', animated: true, markerEnd: {type: MarkerType.Arrow, height: '20px', width: '20px'}}, get().edges),
       });
     },
+    // Returns a fresh node object instead of mutating node.data in place, so
+    // ReactFlow/zustand consumers reliably see the change.
     updateNodeField: (nodeId, fieldName, fieldValue) => {
       set({
-        nodes: get().nodes.map((node) => {
-          if (node.id === nodeId) {
-            node.data = { ...node.data, [fieldName]: fieldValue };
-          }
-  
-          return node;
-        }),
+        nodes: get().nodes.map((node) =>
+          node.id === nodeId
+            ? { ...node, data: { ...node.data, [fieldName]: fieldValue } }
+            : node
+        ),
       });
     },
   }));
