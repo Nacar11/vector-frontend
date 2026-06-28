@@ -11,6 +11,10 @@ const POSITION_MAP = {
   bottom: Position.Bottom,
 };
 
+// `!` important utilities override ReactFlow's default .react-flow__handle styles.
+const HANDLE_CLASS =
+  '!h-3 !w-3 !border-2 !border-white !bg-brand-500 !transition hover:!bg-brand-400 dark:!border-slate-800';
+
 // Full ReactFlow handle id. Keeps the existing `${nodeId}-${handleId}` convention
 // so edges connected to migrated nodes keep working.
 export const buildHandleId = (nodeId, handleId) => `${nodeId}-${handleId}`;
@@ -36,6 +40,7 @@ export const NodeHandles = ({ nodeId, handles = [] }) => {
         type={handle.type}
         position={POSITION_MAP[handle.position] ?? Position.Left}
         id={buildHandleId(nodeId, handle.id)}
+        className={HANDLE_CLASS}
         style={{ ...layout, ...(handle.style || {}) }}
       />
     );

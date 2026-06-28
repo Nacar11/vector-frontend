@@ -1,8 +1,8 @@
 // fields.js
-// Field-type registry for the node abstraction.
-// A field definition is pure data; this module turns it into a labeled input
-// that reads/writes through a single onChange callback (wired to the store by
-// BaseNode). Add a new input type by adding one entry to `renderers`.
+// Field-type registry for the node abstraction. A field definition is pure data;
+// this module turns it into a labeled input that reads/writes through a single
+// onChange callback (wired to the store by BaseNode). Add an input type by adding
+// one entry to `renderers`.
 
 // Resolve a field's default, which may be a literal or a function of the node id.
 export const resolveDefault = (field, id) =>
@@ -14,7 +14,7 @@ const renderers = {
   text: ({ value, onChange }) => (
     <input
       type="text"
-      className="vs-node__input"
+      className="vs-input"
       value={value ?? ''}
       onChange={(e) => onChange(e.target.value)}
     />
@@ -22,21 +22,21 @@ const renderers = {
   number: ({ value, onChange }) => (
     <input
       type="number"
-      className="vs-node__input"
+      className="vs-input"
       value={value ?? ''}
       onChange={(e) => onChange(e.target.value)}
     />
   ),
   textarea: ({ value, onChange }) => (
     <textarea
-      className="vs-node__input vs-node__textarea"
+      className="vs-input min-h-[48px] resize-y"
       value={value ?? ''}
       onChange={(e) => onChange(e.target.value)}
     />
   ),
   select: ({ field, value, onChange }) => (
     <select
-      className="vs-node__input"
+      className="vs-input"
       value={value ?? ''}
       onChange={(e) => onChange(e.target.value)}
     >
@@ -54,7 +54,7 @@ const renderers = {
   checkbox: ({ value, onChange }) => (
     <input
       type="checkbox"
-      className="vs-node__checkbox"
+      className="h-4 w-4 accent-brand-600"
       checked={!!value}
       onChange={(e) => onChange(e.target.checked)}
     />
@@ -65,14 +65,28 @@ const renderers = {
     field.render?.({ id, data, value, onChange }) ?? null,
 };
 
-// Renders one labeled field row.
+// Renders one labeled field row. The control stays wrapped in the <label> so its
+// accessible name is the field label (keeps getByLabelText working).
 export const FieldRow = ({ field, id, data, value, onChange }) => {
   const renderer = renderers[field.type] ?? renderers.text;
   const control = renderer({ field, id, data, value, onChange });
+  const isCheckbox = field.type === 'checkbox';
+
   return (
-    <label className={`vs-node__field vs-node__field--${field.type}`}>
-      {field.label && <span className="vs-node__label">{field.label}</span>}
-      {control}
+    <label
+      className={`flex ${isCheckbox ? 'items-center' : 'flex-col'} gap-1 text-xs font-medium text-slate-600 dark:text-slate-300`}
+    >
+      {isCheckbox ? (
+        <>
+          {control}
+          {field.label && <span>{field.label}</span>}
+        </>
+      ) : (
+        <>
+          {field.label && <span>{field.label}</span>}
+          {control}
+        </>
+      )}
     </label>
   );
 };

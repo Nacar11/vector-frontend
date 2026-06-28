@@ -1,10 +1,10 @@
 // submit.js
+// Self-contained styled button. Behavior (POST to /pipelines/parse) is Part 4.
 
 export const SubmitButton = () => {
-
-    return (
-        <div style={{display: 'flex', alignItems: 'center', justifyContent: 'center'}}>
-            <button type="submit">Submit</button>
-        </div>
-    );
-}
+  return (
+    <button type="submit" className="vs-btn">
+      Submit
+    </button>
+  );
+};

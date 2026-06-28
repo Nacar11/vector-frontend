@@ -8,6 +8,9 @@ import {
     MarkerType,
   } from 'reactflow';
 
+// Brand-colored edges read well on both light and dark canvases.
+const EDGE_COLOR = '#6366f1';
+
 export const useStore = create((set, get) => ({
     nodes: [],
     edges: [],
@@ -38,7 +41,13 @@ export const useStore = create((set, get) => ({
     },
     onConnect: (connection) => {
       set({
-        edges: addEdge({...connection, type: 'smoothstep', animated: true, markerEnd: {type: MarkerType.Arrow, height: '20px', width: '20px'}}, get().edges),
+        edges: addEdge({
+          ...connection,
+          type: 'smoothstep',
+          animated: true,
+          style: { stroke: EDGE_COLOR, strokeWidth: 2 },
+          markerEnd: { type: MarkerType.ArrowClosed, color: EDGE_COLOR, height: 18, width: 18 },
+        }, get().edges),
       });
     },
     // Returns a fresh node object instead of mutating node.data in place, so

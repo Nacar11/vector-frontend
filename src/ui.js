@@ -6,6 +6,7 @@ import { useState, useRef, useCallback } from 'react';
 import ReactFlow, { Controls, Background, MiniMap } from 'reactflow';
 import { useStore } from './store';
 import { shallow } from 'zustand/shallow';
+import { useTheme } from './theme';
 import { nodeTypes, buildInitialData } from './nodes/nodeRegistry';
 
 import 'reactflow/dist/style.css';
@@ -26,6 +27,8 @@ const selector = (state) => ({
 export const PipelineUI = () => {
     const reactFlowWrapper = useRef(null);
     const [reactFlowInstance, setReactFlowInstance] = useState(null);
+    const { theme } = useTheme();
+    const isDark = theme === 'dark';
     const {
       nodes,
       edges,
@@ -75,7 +78,7 @@ export const PipelineUI = () => {
     }, []);
 
     return (
-        <div ref={reactFlowWrapper} style={{width: '100vw', height: '70vh'}}>
+        <div ref={reactFlowWrapper} className="h-full w-full">
             <ReactFlow
                 nodes={nodes}
                 edges={edges}
@@ -89,10 +92,17 @@ export const PipelineUI = () => {
                 proOptions={proOptions}
                 snapGrid={[gridSize, gridSize]}
                 connectionLineType='smoothstep'
+                connectionLineStyle={{ stroke: '#6366f1', strokeWidth: 2 }}
+                fitView
             >
-                <Background color="#aaa" gap={gridSize} />
+                <Background color={isDark ? '#334155' : '#cbd5e1'} gap={gridSize} />
                 <Controls />
-                <MiniMap />
+                <MiniMap
+                    pannable
+                    zoomable
+                    nodeColor={isDark ? '#475569' : '#cbd5e1'}
+                    maskColor={isDark ? 'rgba(2, 6, 23, 0.6)' : 'rgba(241, 245, 249, 0.6)'}
+                />
             </ReactFlow>
         </div>
     )
