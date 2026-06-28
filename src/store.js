@@ -61,4 +61,18 @@ export const useStore = create((set, get) => ({
         ),
       });
     },
+    // Drop edges attached to a node via a handle that no longer exists (e.g. a
+    // Text-node variable handle that was deleted). No-op if nothing changed.
+    pruneNodeEdges: (nodeId, validHandleIds) => {
+      const valid = new Set(validHandleIds);
+      const edges = get().edges;
+      const next = edges.filter((edge) => {
+        if (edge.source === nodeId && edge.sourceHandle && !valid.has(edge.sourceHandle)) return false;
+        if (edge.target === nodeId && edge.targetHandle && !valid.has(edge.targetHandle)) return false;
+        return true;
+      });
+      if (next.length !== edges.length) {
+        set({ edges: next });
+      }
+    },
   }));

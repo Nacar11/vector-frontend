@@ -4,6 +4,8 @@
 // onChange callback (wired to the store by BaseNode). Add an input type by adding
 // one entry to `renderers`.
 
+import { AutoResizeTextarea } from './AutoResizeTextarea';
+
 // Resolve a field's default, which may be a literal or a function of the node id.
 export const resolveDefault = (field, id) =>
   typeof field.default === 'function' ? field.default(id) : field.default;
@@ -32,6 +34,14 @@ const renderers = {
       className="vs-input min-h-[48px] resize-y"
       value={value ?? ''}
       onChange={(e) => onChange(e.target.value)}
+    />
+  ),
+  // Auto-resizing textarea (grows in width and height) — used by the Text node.
+  autoTextarea: ({ value, onChange }) => (
+    <AutoResizeTextarea
+      className="vs-input resize-none overflow-hidden"
+      value={value}
+      onChange={onChange}
     />
   ),
   select: ({ field, value, onChange }) => (
